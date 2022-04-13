@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lets Browse</string>
+    <string name="enter_url">Enter Url</string>
+    <string name="go_btn">Go Button</string>
+    <string name="settings_btn">Settings Button</string>
+
+    <string name="search_hint">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
