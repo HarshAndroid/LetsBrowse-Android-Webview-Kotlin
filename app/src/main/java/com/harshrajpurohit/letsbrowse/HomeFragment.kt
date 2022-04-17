@@ -27,6 +27,7 @@ class HomeFragment : Fragment() {
         val mainActivityRef = requireActivity() as MainActivity
         mainActivityRef.binding.topSearchBar.setText("")
         binding.searchView.setQuery("",false)
+        mainActivityRef.binding.webIcon.setImageResource(R.drawable.ic_search)
 
         binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(result: String?): Boolean {

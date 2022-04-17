@@ -21,6 +21,7 @@
             android:layout_height="50dp">
 
             <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/webIcon"
                 android:layout_width="25dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_search" />
@@ -47,9 +48,11 @@
         </LinearLayout>
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleY="0.5"/>
+            android:scaleY="0.5"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
