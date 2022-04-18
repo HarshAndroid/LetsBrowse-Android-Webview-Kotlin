@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layoutDescription="@xml/activity_main_scene"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -17,8 +18,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/webIcon"
@@ -30,19 +31,21 @@
                 android:id="@+id/topSearchBar"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:hint="@string/enter_url"
                 android:layout_weight="1"
-                android:paddingHorizontal="5dp"
                 android:background="@drawable/custom_design"
-                android:singleLine="true"/>
+                android:hint="@string/enter_url"
+                android:paddingHorizontal="5dp"
+                android:singleLine="true"
+                android:textColorHint="#757575" />
 
             <ImageButton
                 android:id="@+id/goBtn"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_forward"
                 android:background="?attr/selectableItemBackground"
-                android:contentDescription="@string/go_btn" />
+                android:contentDescription="@string/go_btn"
+                android:src="@drawable/ic_forward"
+                tools:ignore="RedundantDescriptionCheck" />
 
 
         </LinearLayout>
@@ -52,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleY="0.5"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -67,17 +70,19 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/settingBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/settings_btn"
+        android:src="@drawable/ic_settings"
+        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.9"
-        android:contentDescription="@string/settings_btn"
-        android:src="@drawable/ic_settings"
-        app:backgroundTint="@color/white"/>
+        tools:ignore="RedundantDescriptionCheck" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

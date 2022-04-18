@@ -7,10 +7,7 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.URLUtil
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import androidx.fragment.app.Fragment
 import com.harshrajpurohit.letsbrowse.databinding.FragmentBrowseBinding
 
@@ -27,7 +24,7 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
         return view
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
+    @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
 
@@ -69,6 +66,7 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                     binding.webView.visibility = View.GONE
                     binding.customView.visibility = View.VISIBLE
                     binding.customView.addView(view)
+                    mainRef.binding.root.transitionToEnd()
                 }
 
                 override fun onHideCustomView() {
@@ -89,6 +87,27 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                 urlNew.contains(".com", ignoreCase = true) -> loadUrl(urlNew)
                 else -> loadUrl("https://www.google.com/search?q=$urlNew")
             }
+
+            binding.webView.setOnTouchListener { _, motionEvent ->
+                mainRef.binding.root.onTouchEvent(motionEvent)
+                return@setOnTouchListener false
+            }
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        //for clearing all webview data
+        binding.webView.apply {
+            clearMatches()
+            clearHistory()
+            clearFormData()
+            clearSslPreferences()
+            clearCache(true)
+
+            CookieManager.getInstance().removeAllCookies(null)
+            WebStorage.getInstance().deleteAllData()
+        }
+
     }
 }
