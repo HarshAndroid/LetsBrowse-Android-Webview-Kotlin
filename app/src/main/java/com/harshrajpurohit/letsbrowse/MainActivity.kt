@@ -11,12 +11,18 @@ import android.print.PrintAttributes
 import android.print.PrintJob
 import android.print.PrintManager
 import android.view.Gravity
+import android.view.WindowManager
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.harshrajpurohit.letsbrowse.databinding.ActivityMainBinding
@@ -32,20 +38,24 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         var tabsList: ArrayList<Fragment> = ArrayList()
+        private var isFullscreen: Boolean = true
+        var isDesktopSite: Boolean = false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.attributes.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
 
         tabsList.add(HomeFragment())
-
         binding.myPager.adapter = TabsAdapter(supportFragmentManager, lifecycle)
         binding.myPager.isUserInputEnabled = false
         initializeView()
+        changeFullscreen(enable = true)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -120,6 +130,20 @@ class MainActivity : AppCompatActivity() {
             }
             dialog.show()
 
+            if(isFullscreen){
+                dialogBinding.fullscreenBtn.apply {
+                    setIconTintResource(R.color.cool_blue)
+                    setTextColor(ContextCompat.getColor(this@MainActivity, R.color.cool_blue))
+                }
+            }
+
+            if(isDesktopSite){
+                dialogBinding.desktopBtn.apply {
+                    setIconTintResource(R.color.cool_blue)
+                    setTextColor(ContextCompat.getColor(this@MainActivity, R.color.cool_blue))
+                }
+            }
+
             dialogBinding.backBtn.setOnClickListener {
                 onBackPressed()
             }
@@ -132,9 +156,52 @@ class MainActivity : AppCompatActivity() {
             }
 
             dialogBinding.saveBtn.setOnClickListener {
+                dialog.dismiss()
                 if(frag != null)
                     saveAsPdf(web = frag.binding.webView)
                 else Snackbar.make(binding.root, "First Open A WebPage\uD83D\uDE03", 3000).show()
+            }
+
+            dialogBinding.fullscreenBtn.setOnClickListener {
+                it as MaterialButton
+
+                isFullscreen = if (isFullscreen) {
+                    changeFullscreen(enable = false)
+                    it.setIconTintResource(R.color.black)
+                    it.setTextColor(ContextCompat.getColor(this, R.color.black))
+                    false
+                }
+                else {
+                    changeFullscreen(enable = true)
+                    it.setIconTintResource(R.color.cool_blue)
+                    it.setTextColor(ContextCompat.getColor(this, R.color.cool_blue))
+                    true
+                }
+            }
+
+            dialogBinding.desktopBtn.setOnClickListener {
+                it as MaterialButton
+
+                frag?.binding?.webView?.apply {
+                    isDesktopSite = if (isDesktopSite) {
+                        settings.userAgentString = null
+                        it.setIconTintResource(R.color.black)
+                        it.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.black))
+                        false
+                    }
+                    else {
+                        settings.userAgentString = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0"
+                        settings.useWideViewPort = true
+                        evaluateJavascript("document.querySelector('meta[name=\"viewport\"]').setAttribute('content'," +
+                                " 'width=1024px, initial-scale=' + (document.documentElement.clientWidth / 1024));", null)
+                        it.setIconTintResource(R.color.cool_blue)
+                        it.setTextColor(ContextCompat.getColor(this@MainActivity, R.color.cool_blue))
+                        true
+                    }
+                    reload()
+                    dialog.dismiss()
+                }
+
             }
         }
 
@@ -158,5 +225,18 @@ class MainActivity : AppCompatActivity() {
         val printAdapter = web.createPrintDocumentAdapter(jobName)
         val printAttributes = PrintAttributes.Builder()
         printJob = pm.print(jobName, printAdapter, printAttributes.build())
+    }
+
+    private fun changeFullscreen(enable: Boolean){
+        if(enable){
+            WindowCompat.setDecorFitsSystemWindows(window, false)
+            WindowInsetsControllerCompat(window, binding.root).let { controller ->
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }else{
+            WindowCompat.setDecorFitsSystemWindows(window, true)
+            WindowInsetsControllerCompat(window, binding.root).show(WindowInsetsCompat.Type.systemBars())
+        }
     }
 }

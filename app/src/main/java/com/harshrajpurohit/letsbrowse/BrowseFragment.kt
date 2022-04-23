@@ -36,6 +36,14 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
             settings.builtInZoomControls = true
             settings.displayZoomControls = false
             webViewClient = object: WebViewClient(){
+
+                override fun onLoadResource(view: WebView?, url: String?) {
+                    super.onLoadResource(view, url)
+                    if(MainActivity.isDesktopSite)
+                        view?.evaluateJavascript("document.querySelector('meta[name=\"viewport\"]').setAttribute('content'," +
+                                " 'width=1024px, initial-scale=' + (document.documentElement.clientWidth / 1024));", null)
+                }
+
                 override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
                     super.doUpdateVisitedHistory(view, url, isReload)
                     mainRef.binding.topSearchBar.text = SpannableStringBuilder(url)
@@ -45,11 +53,13 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                     super.onPageStarted(view, url, favicon)
                     mainRef.binding.progressBar.progress = 0
                     mainRef.binding.progressBar.visibility = View.VISIBLE
+                    if(url!!.contains("you", ignoreCase = false)) mainRef.binding.root.transitionToEnd()
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     mainRef.binding.progressBar.visibility = View.GONE
+                    binding.webView.zoomOut()
                 }
             }
             webChromeClient = object: WebChromeClient(){
