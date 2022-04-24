@@ -16,7 +16,7 @@
         android:theme="@style/Theme.LetsBrowse"
         tools:targetApi="m">
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:configChanges="uiMode|keyboard|keyboardHidden|screenSize|screenLayout|smallestScreenSize|orientation"
             android:exported="true">
             <intent-filter>

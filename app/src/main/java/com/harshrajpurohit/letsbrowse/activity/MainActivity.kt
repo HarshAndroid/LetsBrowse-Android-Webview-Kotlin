@@ -1,4 +1,4 @@
-package com.harshrajpurohit.letsbrowse
+package com.harshrajpurohit.letsbrowse.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -25,8 +25,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.databinding.ActivityMainBinding
 import com.harshrajpurohit.letsbrowse.databinding.MoreFeaturesBinding
+import com.harshrajpurohit.letsbrowse.fragment.BrowseFragment
+import com.harshrajpurohit.letsbrowse.fragment.HomeFragment
+import com.harshrajpurohit.letsbrowse.model.Bookmark
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         var tabsList: ArrayList<Fragment> = ArrayList()
         private var isFullscreen: Boolean = true
         var isDesktopSite: Boolean = false
+        var bookmarkList: ArrayList<Bookmark> = ArrayList()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBackPressed() {
-        var frag:BrowseFragment? = null
+        var frag: BrowseFragment? = null
         try {
             frag = tabsList[binding.myPager.currentItem] as BrowseFragment
         }catch (e:Exception){}
@@ -113,7 +118,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initializeView(){
         binding.settingBtn.setOnClickListener {
-            var frag:BrowseFragment? = null
+            var frag: BrowseFragment? = null
             try {
                 frag = tabsList[binding.myPager.currentItem] as BrowseFragment
             }catch (e:Exception){}

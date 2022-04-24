@@ -1,4 +1,4 @@
-package com.harshrajpurohit.letsbrowse
+package com.harshrajpurohit.letsbrowse.fragment
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
+import com.harshrajpurohit.letsbrowse.activity.MainActivity
+import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.databinding.FragmentBrowseBinding
 
 class BrowseFragment(private var urlNew: String) : Fragment() {

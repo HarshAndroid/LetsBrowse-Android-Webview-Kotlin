@@ -1,4 +1,4 @@
-package com.harshrajpurohit.letsbrowse
+package com.harshrajpurohit.letsbrowse.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.harshrajpurohit.letsbrowse.model.Bookmark
+import com.harshrajpurohit.letsbrowse.adapter.BookmarkAdapter
+import com.harshrajpurohit.letsbrowse.activity.MainActivity
+import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.databinding.FragmentHomeBinding
 
 
@@ -42,12 +47,25 @@ class HomeFragment : Fragment() {
         mainActivityRef.binding.goBtn.setOnClickListener {
             if(mainActivityRef.checkForInternet(requireContext()))
                 mainActivityRef.changeTab(mainActivityRef.binding.topSearchBar.text.toString(),
-                    BrowseFragment(mainActivityRef.binding.topSearchBar.text.toString()))
+                    BrowseFragment(mainActivityRef.binding.topSearchBar.text.toString())
+                )
             else
                 Snackbar.make(binding.root, "Internet Not Connected\uD83D\uDE03", 3000).show()
         }
 
+        MainActivity.bookmarkList.add(Bookmark(name = "Google", url = "www.google.com"))
+        MainActivity.bookmarkList.add(Bookmark(name = "Youtube", url = "www.youtube.com"))
+        MainActivity.bookmarkList.add(Bookmark(name = "Bing", url = "www.bing.com"))
+        MainActivity.bookmarkList.add(Bookmark(name = "Medium", url = "www.medium.com"))
+        MainActivity.bookmarkList.add(Bookmark(name = "Stacks Overflow", url = "www.stackoverflow.com"))
+        MainActivity.bookmarkList.add(Bookmark(name = "FaceBook", url = "www.facebook.com"))
+        MainActivity.bookmarkList.add(Bookmark(name = "Gmail", url = "www.gmail.com"))
+        MainActivity.bookmarkList.add(Bookmark(name = "Outlook", url = "www.outlook.com"))
 
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.setItemViewCacheSize(5)
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 5)
+        binding.recyclerView.adapter = BookmarkAdapter(requireContext())
 
     }
 }
