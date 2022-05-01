@@ -14,4 +14,12 @@
     <color name="cool_green">#64DD17</color>
     <color name="cool_pink">#F50057</color>
     <color name="yellow">#FFD600</color>
+
+    <integer-array name="myColors">
+        <item>@color/cool_green</item>
+        <item>@color/cool_pink</item>
+        <item>@color/black</item>
+        <item>@color/cool_blue</item>
+        <item>@color/purple_500</item>
+    </integer-array>
 </resources>
