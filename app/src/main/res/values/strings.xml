@@ -12,4 +12,5 @@
     <string name="fullscreen">FullScreen</string>
     <string name="save">Save</string>
     <string name="desktop">Desktop</string>
+    <string name="bookmark_name">Bookmark Name</string>
 </resources>

@@ -27,7 +27,7 @@ class BookmarkAdapter(private val context: Context): RecyclerView.Adapter<Bookma
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.image.setBackgroundColor(colors[(colors.indices).random()])
         holder.image.text = MainActivity.bookmarkList[position].name[0].toString()
-        holder.name.text = MainActivity.bookmarkList[position].url
+        holder.name.text = MainActivity.bookmarkList[position].name
 
         holder.root.setOnClickListener{
             context as MainActivity

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:startIconDrawable="@drawable/ic_bookmark"
+        app:boxStrokeColor="@color/cool_blue"
+        app:startIconTint="@color/cool_blue"
+        app:hintTextColor="@color/cool_blue"
+        android:layout_marginHorizontal="16dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/bookmarkTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/bookmark_name"
+            android:textCursorDrawable="@color/cool_blue"
+            android:maxLength="200"
+            android:inputType="textAutoComplete"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
