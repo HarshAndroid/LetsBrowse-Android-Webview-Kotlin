@@ -9,9 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
-import com.harshrajpurohit.letsbrowse.activity.MainActivity
 import com.harshrajpurohit.letsbrowse.R
+import com.harshrajpurohit.letsbrowse.activity.MainActivity
 import com.harshrajpurohit.letsbrowse.databinding.FragmentBrowseBinding
+import java.io.ByteArrayOutputStream
 
 class BrowseFragment(private var urlNew: String) : Fragment() {
 
@@ -70,6 +71,13 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                     super.onReceivedIcon(view, icon)
                     try{
                         mainRef.binding.webIcon.setImageBitmap(icon)
+
+                        MainActivity.bookmarkIndex = mainRef.isBookmarked(view?.url!!)
+                        if(MainActivity.bookmarkIndex != -1){
+                            val array = ByteArrayOutputStream()
+                            icon!!.compress(Bitmap.CompressFormat.PNG, 100, array)
+                            MainActivity.bookmarkList[MainActivity.bookmarkIndex].image = array.toByteArray()
+                        }
                     }catch (e: Exception){}
                 }
 
@@ -109,6 +117,7 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
 
     override fun onPause() {
         super.onPause()
+        (requireActivity() as MainActivity).saveBookmarks()
         //for clearing all webview data
         binding.webView.apply {
             clearMatches()

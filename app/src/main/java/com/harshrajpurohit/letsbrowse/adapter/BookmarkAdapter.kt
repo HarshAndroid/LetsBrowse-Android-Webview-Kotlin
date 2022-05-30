@@ -1,8 +1,10 @@
 package com.harshrajpurohit.letsbrowse.adapter
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.harshrajpurohit.letsbrowse.R
@@ -25,8 +27,14 @@ class BookmarkAdapter(private val context: Context): RecyclerView.Adapter<Bookma
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        holder.image.setBackgroundColor(colors[(colors.indices).random()])
-        holder.image.text = MainActivity.bookmarkList[position].name[0].toString()
+        try {
+            val icon = BitmapFactory.decodeByteArray(MainActivity.bookmarkList[position].image, 0,
+                MainActivity.bookmarkList[position].image!!.size)
+            holder.image.background = icon.toDrawable(context.resources)
+        }catch (e: Exception){
+            holder.image.setBackgroundColor(colors[(colors.indices).random()])
+            holder.image.text = MainActivity.bookmarkList[position].name[0].toString()
+        }
         holder.name.text = MainActivity.bookmarkList[position].name
 
         holder.root.setOnClickListener{

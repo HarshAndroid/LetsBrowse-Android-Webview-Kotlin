@@ -25,6 +25,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.databinding.ActivityMainBinding
 import com.harshrajpurohit.letsbrowse.databinding.BookmarkDialogBinding
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        getAllBookmarks()
 
         tabsList.add(HomeFragment())
         binding.myPager.adapter = TabsAdapter(supportFragmentManager, lifecycle)
@@ -295,4 +299,27 @@ class MainActivity : AppCompatActivity() {
         }
         return -1
     }
+
+    fun saveBookmarks(){
+        //for storing bookmarks data using shared preferences
+        val editor = getSharedPreferences("BOOKMARKS", MODE_PRIVATE).edit()
+
+        val data = GsonBuilder().create().toJson(bookmarkList)
+        editor.putString("bookmarkList", data)
+
+        editor.apply()
+    }
+
+    fun getAllBookmarks(){
+        //for getting bookmarks data using shared preferences from storage
+        bookmarkList = ArrayList()
+        val editor = getSharedPreferences("BOOKMARKS", MODE_PRIVATE)
+        val data = editor.getString("bookmarkList", null)
+
+        if(data != null){
+            val list: ArrayList<Bookmark> = GsonBuilder().create().fromJson(data, object: TypeToken<ArrayList<Bookmark>>(){}.type)
+            bookmarkList.addAll(list)
+        }
+    }
+
 }
