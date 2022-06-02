@@ -1,5 +1,6 @@
 package com.harshrajpurohit.letsbrowse.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.harshrajpurohit.letsbrowse.R
+import com.harshrajpurohit.letsbrowse.activity.BookmarkActivity
 import com.harshrajpurohit.letsbrowse.activity.MainActivity
+import com.harshrajpurohit.letsbrowse.activity.changeTab
+import com.harshrajpurohit.letsbrowse.activity.checkForInternet
 import com.harshrajpurohit.letsbrowse.adapter.BookmarkAdapter
 import com.harshrajpurohit.letsbrowse.databinding.FragmentHomeBinding
 
@@ -35,8 +39,8 @@ class HomeFragment : Fragment() {
 
         binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(result: String?): Boolean {
-                if(mainActivityRef.checkForInternet(requireContext()))
-                    mainActivityRef.changeTab(result!!, BrowseFragment(result))
+                if(checkForInternet(requireContext()))
+                    changeTab(result!!, BrowseFragment(result))
                 else
                     Snackbar.make(binding.root, "Internet Not Connected\uD83D\uDE03", 3000).show()
                 return true
@@ -44,8 +48,8 @@ class HomeFragment : Fragment() {
             override fun onQueryTextChange(p0: String?): Boolean = false
         })
         mainActivityRef.binding.goBtn.setOnClickListener {
-            if(mainActivityRef.checkForInternet(requireContext()))
-                mainActivityRef.changeTab(mainActivityRef.binding.topSearchBar.text.toString(),
+            if(checkForInternet(requireContext()))
+                changeTab(mainActivityRef.binding.topSearchBar.text.toString(),
                     BrowseFragment(mainActivityRef.binding.topSearchBar.text.toString())
                 )
             else
@@ -56,5 +60,11 @@ class HomeFragment : Fragment() {
         binding.recyclerView.setItemViewCacheSize(5)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 5)
         binding.recyclerView.adapter = BookmarkAdapter(requireContext())
+
+        if(MainActivity.bookmarkList.size < 1)
+            binding.viewAllBtn.visibility = View.GONE
+        binding.viewAllBtn.setOnClickListener {
+            startActivity(Intent(requireContext(), BookmarkActivity::class.java))
+        }
     }
 }

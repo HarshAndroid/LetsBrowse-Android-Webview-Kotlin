@@ -17,6 +17,7 @@ import java.io.ByteArrayOutputStream
 class BrowseFragment(private var urlNew: String) : Fragment() {
 
     lateinit var binding: FragmentBrowseBinding
+    var webIcon: Bitmap? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -71,7 +72,7 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                     super.onReceivedIcon(view, icon)
                     try{
                         mainRef.binding.webIcon.setImageBitmap(icon)
-
+                        webIcon = icon
                         MainActivity.bookmarkIndex = mainRef.isBookmarked(view?.url!!)
                         if(MainActivity.bookmarkIndex != -1){
                             val array = ByteArrayOutputStream()

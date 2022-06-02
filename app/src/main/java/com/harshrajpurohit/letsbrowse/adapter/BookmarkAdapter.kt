@@ -1,5 +1,6 @@
 package com.harshrajpurohit.letsbrowse.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
@@ -9,21 +10,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.activity.MainActivity
+import com.harshrajpurohit.letsbrowse.activity.changeTab
+import com.harshrajpurohit.letsbrowse.activity.checkForInternet
 import com.harshrajpurohit.letsbrowse.databinding.BookmarkViewBinding
+import com.harshrajpurohit.letsbrowse.databinding.LongBookmarkViewBinding
 import com.harshrajpurohit.letsbrowse.fragment.BrowseFragment
 
-class BookmarkAdapter(private val context: Context): RecyclerView.Adapter<BookmarkAdapter.MyHolder>() {
+class BookmarkAdapter(private val context: Context, private val isActivity: Boolean = false): RecyclerView.Adapter<BookmarkAdapter.MyHolder>() {
 
     private val colors = context.resources.getIntArray(R.array.myColors)
 
-    class MyHolder(binding: BookmarkViewBinding):RecyclerView.ViewHolder(binding.root) {
-        val image = binding.bookmarkIcon
-        val name = binding.bookmarkName
-        val root = binding.root
+    class MyHolder(binding: BookmarkViewBinding? = null, bindingL: LongBookmarkViewBinding? = null)
+        :RecyclerView.ViewHolder((binding?.root ?: bindingL?.root)!!) {
+        val image = (binding?.bookmarkIcon ?: bindingL?.bookmarkIcon)!!
+        val name = (binding?.bookmarkName ?: bindingL?.bookmarkName)!!
+        val root = (binding?.root ?: bindingL?.root)!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        return MyHolder(BookmarkViewBinding.inflate(LayoutInflater.from(context), parent, false))
+        if(isActivity)
+            return MyHolder(bindingL = LongBookmarkViewBinding.inflate(LayoutInflater.from(context), parent, false))
+        return MyHolder(binding = BookmarkViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
@@ -38,10 +45,12 @@ class BookmarkAdapter(private val context: Context): RecyclerView.Adapter<Bookma
         holder.name.text = MainActivity.bookmarkList[position].name
 
         holder.root.setOnClickListener{
-            context as MainActivity
             when{
-                context.checkForInternet(context) -> context.changeTab(MainActivity.bookmarkList[position].name,
+                checkForInternet(context) -> {
+                    changeTab(MainActivity.bookmarkList[position].name,
                 BrowseFragment(urlNew = MainActivity.bookmarkList[position].url))
+                    if(isActivity) (context as Activity).finish()
+                }
                 else -> Snackbar.make(holder.root, "Internet Not Connected\uD83D\uDE03", 3000).show()
             }
 
