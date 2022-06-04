@@ -15,4 +15,6 @@
     <string name="bookmark_name">Bookmark Name</string>
     <string name="view_all">View All</string>
     <string name="all_bookmarks">All Bookmarks</string>
+    <string name="refresh_btn">Refresh</string>
+    <string name="one">1</string>
 </resources>

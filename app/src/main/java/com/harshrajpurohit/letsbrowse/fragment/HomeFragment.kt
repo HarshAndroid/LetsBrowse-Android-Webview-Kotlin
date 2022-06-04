@@ -37,6 +37,8 @@ class HomeFragment : Fragment() {
         binding.searchView.setQuery("",false)
         mainActivityRef.binding.webIcon.setImageResource(R.drawable.ic_search)
 
+        mainActivityRef.binding.refreshBtn.visibility = View.GONE
+
         binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(result: String?): Boolean {
                 if(checkForInternet(requireContext()))

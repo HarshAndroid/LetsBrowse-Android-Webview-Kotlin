@@ -38,6 +38,27 @@
                 android:singleLine="true"
                 android:textColorHint="#757575" />
 
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tabsBtn"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/custom_tabs_textview"
+                android:text="@string/one"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="4dp"
+                tools:ignore="RedundantDescriptionCheck" />
+
+            <ImageButton
+                android:id="@+id/refreshBtn"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground"
+                android:contentDescription="@string/refresh_btn"
+                android:src="@drawable/ic_refresh"
+                tools:ignore="RedundantDescriptionCheck" />
+
             <ImageButton
                 android:id="@+id/goBtn"
                 android:layout_width="40dp"
@@ -45,7 +66,8 @@
                 android:background="?attr/selectableItemBackground"
                 android:contentDescription="@string/go_btn"
                 android:src="@drawable/ic_forward"
-                tools:ignore="RedundantDescriptionCheck" />
+                tools:ignore="RedundantDescriptionCheck"
+                />
 
 
         </LinearLayout>

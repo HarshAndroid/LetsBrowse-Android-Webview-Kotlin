@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="15dp"
+    android:layout_marginBottom="5dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_globe"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="10dp"
+        android:padding="5dp"
+        />
+
+    <TextView
+        android:id="@+id/tabName"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="@string/bookmark"
+        android:textColor="@color/black"
+        android:layout_marginHorizontal="60dp"/>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/cancelBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_cancel"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginHorizontal="10dp"
+        android:padding="5dp"
+        />
+
+</com.google.android.material.card.MaterialCardView>
