@@ -3,6 +3,7 @@ package com.harshrajpurohit.letsbrowse.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -14,8 +15,10 @@ import android.print.PrintManager
 import android.view.Gravity
 import android.view.WindowManager
 import android.webkit.WebView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -34,6 +37,7 @@ import com.harshrajpurohit.letsbrowse.activity.MainActivity.Companion.myPager
 import com.harshrajpurohit.letsbrowse.databinding.ActivityMainBinding
 import com.harshrajpurohit.letsbrowse.databinding.BookmarkDialogBinding
 import com.harshrajpurohit.letsbrowse.databinding.MoreFeaturesBinding
+import com.harshrajpurohit.letsbrowse.databinding.TabsViewBinding
 import com.harshrajpurohit.letsbrowse.fragment.BrowseFragment
 import com.harshrajpurohit.letsbrowse.fragment.HomeFragment
 import com.harshrajpurohit.letsbrowse.model.Bookmark
@@ -104,6 +108,38 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initializeView(){
+
+        binding.tabsBtn.setOnClickListener {
+            val viewTabs = layoutInflater.inflate(R.layout.tabs_view, binding.root, false)
+            val bindingTabs = TabsViewBinding.bind(viewTabs)
+
+            val dialogTabs = MaterialAlertDialogBuilder(this, R.style.roundCornerDialog).setView(viewTabs)
+                .setTitle("Select Tab")
+                .setPositiveButton("Home"){self, _ ->
+                    self.dismiss()
+                }
+                .setNeutralButton("Google"){self, _ ->
+                    self.dismiss()
+                }
+                .create()
+
+            dialogTabs.show()
+
+            val pBtn = dialogTabs.getButton(AlertDialog.BUTTON_POSITIVE)
+            val nBtn = dialogTabs.getButton(AlertDialog.BUTTON_NEUTRAL)
+
+            pBtn.isAllCaps = false
+            nBtn.isAllCaps = false
+
+            pBtn.setTextColor(Color.BLACK)
+            nBtn.setTextColor(Color.BLACK)
+
+            pBtn.setCompoundDrawablesWithIntrinsicBounds( ResourcesCompat.getDrawable(resources, R.drawable.ic_home, theme)
+                , null, null, null)
+            nBtn.setCompoundDrawablesWithIntrinsicBounds( ResourcesCompat.getDrawable(resources, R.drawable.ic_add, theme)
+                , null, null, null)
+        }
+
         binding.settingBtn.setOnClickListener {
 
             var frag: BrowseFragment? = null
@@ -146,6 +182,8 @@ class MainActivity : AppCompatActivity() {
                     setTextColor(ContextCompat.getColor(this@MainActivity, R.color.cool_blue))
                 }
             }
+
+
 
             dialogBinding.backBtn.setOnClickListener {
                 onBackPressed()
@@ -300,7 +338,7 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
     }
 
-    fun getAllBookmarks(){
+    private fun getAllBookmarks(){
         //for getting bookmarks data using shared preferences from storage
         bookmarkList = ArrayList()
         val editor = getSharedPreferences("BOOKMARKS", MODE_PRIVATE)
