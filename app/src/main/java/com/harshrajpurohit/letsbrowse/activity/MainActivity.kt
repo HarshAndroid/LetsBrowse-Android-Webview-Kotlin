@@ -25,15 +25,19 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.activity.MainActivity.Companion.myPager
+import com.harshrajpurohit.letsbrowse.activity.MainActivity.Companion.tabsBtn
+import com.harshrajpurohit.letsbrowse.adapter.TabAdapter
 import com.harshrajpurohit.letsbrowse.databinding.ActivityMainBinding
 import com.harshrajpurohit.letsbrowse.databinding.BookmarkDialogBinding
 import com.harshrajpurohit.letsbrowse.databinding.MoreFeaturesBinding
@@ -41,6 +45,7 @@ import com.harshrajpurohit.letsbrowse.databinding.TabsViewBinding
 import com.harshrajpurohit.letsbrowse.fragment.BrowseFragment
 import com.harshrajpurohit.letsbrowse.fragment.HomeFragment
 import com.harshrajpurohit.letsbrowse.model.Bookmark
+import com.harshrajpurohit.letsbrowse.model.Tab
 import java.io.ByteArrayOutputStream
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -52,12 +57,13 @@ class MainActivity : AppCompatActivity() {
     private var printJob: PrintJob? = null
 
     companion object{
-        var tabsList: ArrayList<Fragment> = ArrayList()
+        var tabsList: ArrayList<Tab> = ArrayList()
         private var isFullscreen: Boolean = true
         var isDesktopSite: Boolean = false
         var bookmarkList: ArrayList<Bookmark> = ArrayList()
         var bookmarkIndex: Int = -1
         lateinit var myPager: ViewPager2
+        lateinit var tabsBtn: MaterialTextView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,10 +77,12 @@ class MainActivity : AppCompatActivity() {
 
         getAllBookmarks()
 
-        tabsList.add(HomeFragment())
+        tabsList.add(Tab("Home", HomeFragment()))
         binding.myPager.adapter = TabsAdapter(supportFragmentManager, lifecycle)
         binding.myPager.isUserInputEnabled = false
         myPager = binding.myPager
+        tabsBtn = binding.tabsBtn
+
         initializeView()
         changeFullscreen(enable = true)
     }
@@ -102,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     private inner class TabsAdapter(fa: FragmentManager, lc: Lifecycle) : FragmentStateAdapter(fa, lc) {
         override fun getItemCount(): Int = tabsList.size
 
-        override fun createFragment(position: Int): Fragment = tabsList[position]
+        override fun createFragment(position: Int): Fragment = tabsList[position].fragment
     }
 
 
@@ -116,12 +124,18 @@ class MainActivity : AppCompatActivity() {
             val dialogTabs = MaterialAlertDialogBuilder(this, R.style.roundCornerDialog).setView(viewTabs)
                 .setTitle("Select Tab")
                 .setPositiveButton("Home"){self, _ ->
+                    changeTab("Home", HomeFragment())
                     self.dismiss()
                 }
                 .setNeutralButton("Google"){self, _ ->
+                    changeTab("Google", BrowseFragment(urlNew = "www.google.com"))
                     self.dismiss()
                 }
                 .create()
+
+            bindingTabs.tabsRV.setHasFixedSize(true)
+            bindingTabs.tabsRV.layoutManager = LinearLayoutManager(this)
+            bindingTabs.tabsRV.adapter = TabAdapter(this, dialogTabs)
 
             dialogTabs.show()
 
@@ -354,9 +368,10 @@ class MainActivity : AppCompatActivity() {
 
 @SuppressLint("NotifyDataSetChanged")
 fun changeTab(url: String, fragment: Fragment){
-    MainActivity.tabsList.add(fragment)
+    MainActivity.tabsList.add(Tab(name = url, fragment = fragment))
     myPager.adapter?.notifyDataSetChanged()
     myPager.currentItem = MainActivity.tabsList.size - 1
+    tabsBtn.text = MainActivity.tabsList.size.toString()
 }
 
 fun checkForInternet(context: Context): Boolean {

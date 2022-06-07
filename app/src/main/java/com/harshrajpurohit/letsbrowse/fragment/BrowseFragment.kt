@@ -31,6 +31,8 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
     @SuppressLint("SetJavaScriptEnabled", "ClickableViewAccessibility")
     override fun onResume() {
         super.onResume()
+        MainActivity.tabsList[MainActivity.myPager.currentItem].name = binding.webView.url.toString()
+        MainActivity.tabsBtn.text = MainActivity.tabsList.size.toString()
 
         val mainRef = requireActivity() as MainActivity
 
@@ -56,6 +58,7 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                 override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
                     super.doUpdateVisitedHistory(view, url, isReload)
                     mainRef.binding.topSearchBar.text = SpannableStringBuilder(url)
+                    MainActivity.tabsList[MainActivity.myPager.currentItem].name = url.toString()
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
