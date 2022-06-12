@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         var frag: BrowseFragment? = null
         try {
-            frag = tabsList[binding.myPager.currentItem] as BrowseFragment
+            frag = tabsList[binding.myPager.currentItem].fragment as BrowseFragment
         }catch (e:Exception){}
 
         when{
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
 
             var frag: BrowseFragment? = null
             try {
-                frag = tabsList[binding.myPager.currentItem] as BrowseFragment
+                frag = tabsList[binding.myPager.currentItem].fragment as BrowseFragment
             }catch (e:Exception){}
 
             val view = layoutInflater.inflate(R.layout.more_features, binding.root, false)
@@ -367,11 +367,12 @@ class MainActivity : AppCompatActivity() {
 }
 
 @SuppressLint("NotifyDataSetChanged")
-fun changeTab(url: String, fragment: Fragment){
+fun changeTab(url: String, fragment: Fragment, isBackground: Boolean = false){
     MainActivity.tabsList.add(Tab(name = url, fragment = fragment))
     myPager.adapter?.notifyDataSetChanged()
-    myPager.currentItem = MainActivity.tabsList.size - 1
     tabsBtn.text = MainActivity.tabsList.size.toString()
+
+    if(!isBackground) myPager.currentItem = MainActivity.tabsList.size - 1
 }
 
 fun checkForInternet(context: Context): Boolean {

@@ -1,16 +1,18 @@
 package com.harshrajpurohit.letsbrowse.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
 import android.text.SpannableStringBuilder
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.webkit.*
 import androidx.fragment.app.Fragment
 import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.activity.MainActivity
+import com.harshrajpurohit.letsbrowse.activity.changeTab
 import com.harshrajpurohit.letsbrowse.databinding.FragmentBrowseBinding
 import java.io.ByteArrayOutputStream
 
@@ -23,7 +25,15 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_browse, container, false)
         binding = FragmentBrowseBinding.bind(view)
+        registerForContextMenu(binding.webView)
 
+        binding.webView.apply {
+            when{
+                URLUtil.isValidUrl(urlNew) -> loadUrl(urlNew)
+                urlNew.contains(".com", ignoreCase = true) -> loadUrl(urlNew)
+                else -> loadUrl("https://www.google.com/search?q=$urlNew")
+            }
+        }
 
         return view
     }
@@ -33,6 +43,10 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
         super.onResume()
         MainActivity.tabsList[MainActivity.myPager.currentItem].name = binding.webView.url.toString()
         MainActivity.tabsBtn.text = MainActivity.tabsList.size.toString()
+
+        //for downloading file using external download manager
+        binding.webView.setDownloadListener { url, _, _, _, _ -> startActivity(Intent(Intent.ACTION_VIEW).setData(
+            Uri.parse(url))) }
 
         val mainRef = requireActivity() as MainActivity
 
@@ -111,11 +125,7 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                 }
             }
 
-            when{
-                URLUtil.isValidUrl(urlNew) -> loadUrl(urlNew)
-                urlNew.contains(".com", ignoreCase = true) -> loadUrl(urlNew)
-                else -> loadUrl("https://www.google.com/search?q=$urlNew")
-            }
+
 
             binding.webView.setOnTouchListener { _, motionEvent ->
                 mainRef.binding.root.onTouchEvent(motionEvent)
@@ -139,5 +149,51 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
             WebStorage.getInstance().deleteAllData()
         }
 
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+
+        val result = binding.webView.hitTestResult
+        when(result.type){
+            WebView.HitTestResult.IMAGE_TYPE -> {
+                menu.add("View Image")
+                menu.add("Save Image")
+                menu.add("Share Link")
+                menu.add("Close")
+            }
+            WebView.HitTestResult.SRC_ANCHOR_TYPE, WebView.HitTestResult.ANCHOR_TYPE-> {
+                menu.add("Open in New Tab")
+                menu.add("Open Tab in Background")
+                menu.add("Share Link")
+                menu.add("Close")
+            }
+            WebView.HitTestResult.EDIT_TEXT_TYPE, WebView.HitTestResult.UNKNOWN_TYPE -> {}
+            else ->{
+                menu.add("Open in New Tab")
+                menu.add("Open Tab in Background")
+                menu.add("Share Link")
+                menu.add("Close")
+            }
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+
+        val message = Handler().obtainMessage()
+        binding.webView.requestFocusNodeHref(message)
+        val url = message.data.getString("url")
+
+        when(item.title){
+            "Open in New Tab" -> {
+                changeTab(url.toString(), BrowseFragment(url.toString()))
+            }
+            "Open Tab in Background" ->{
+                changeTab(url.toString(), BrowseFragment(url.toString()), isBackground = true)
+            }
+            "Close" -> {}
+        }
+
+        return super.onContextItemSelected(item)
     }
 }
