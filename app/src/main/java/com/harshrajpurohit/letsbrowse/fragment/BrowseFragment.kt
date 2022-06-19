@@ -2,14 +2,24 @@ package com.harshrajpurohit.letsbrowse.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.text.SpannableStringBuilder
+import android.util.Base64
 import android.view.*
 import android.webkit.*
+import androidx.core.app.ShareCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.snackbar.Snackbar
 import com.harshrajpurohit.letsbrowse.R
 import com.harshrajpurohit.letsbrowse.activity.MainActivity
 import com.harshrajpurohit.letsbrowse.activity.changeTab
@@ -125,13 +135,15 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
                 }
             }
 
-
-
             binding.webView.setOnTouchListener { _, motionEvent ->
                 mainRef.binding.root.onTouchEvent(motionEvent)
                 return@setOnTouchListener false
             }
+
+            binding.webView.reload()
         }
+
+
     }
 
     override fun onPause() {
@@ -159,20 +171,20 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
             WebView.HitTestResult.IMAGE_TYPE -> {
                 menu.add("View Image")
                 menu.add("Save Image")
-                menu.add("Share Link")
+                menu.add("Share")
                 menu.add("Close")
             }
             WebView.HitTestResult.SRC_ANCHOR_TYPE, WebView.HitTestResult.ANCHOR_TYPE-> {
                 menu.add("Open in New Tab")
                 menu.add("Open Tab in Background")
-                menu.add("Share Link")
+                menu.add("Share")
                 menu.add("Close")
             }
             WebView.HitTestResult.EDIT_TEXT_TYPE, WebView.HitTestResult.UNKNOWN_TYPE -> {}
             else ->{
                 menu.add("Open in New Tab")
                 menu.add("Open Tab in Background")
-                menu.add("Share Link")
+                menu.add("Share")
                 menu.add("Close")
             }
         }
@@ -183,6 +195,7 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
         val message = Handler().obtainMessage()
         binding.webView.requestFocusNodeHref(message)
         val url = message.data.getString("url")
+        val imgUrl = message.data.getString("src")
 
         when(item.title){
             "Open in New Tab" -> {
@@ -190,6 +203,74 @@ class BrowseFragment(private var urlNew: String) : Fragment() {
             }
             "Open Tab in Background" ->{
                 changeTab(url.toString(), BrowseFragment(url.toString()), isBackground = true)
+            }
+            "View Image" ->{
+                if(imgUrl != null) {
+                    if (imgUrl.contains("base64")) {
+                        val pureBytes = imgUrl.substring(imgUrl.indexOf(",") + 1)
+                        val decodedBytes = Base64.decode(pureBytes, Base64.DEFAULT)
+                        val finalImg =
+                            BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+
+                        val imgView = ShapeableImageView(requireContext())
+                        imgView.setImageBitmap(finalImg)
+
+                        val imgDialog = MaterialAlertDialogBuilder(requireContext()).setView(imgView).create()
+                        imgDialog.show()
+
+                        imgView.layoutParams.width = Resources.getSystem().displayMetrics.widthPixels
+                        imgView.layoutParams.height = (Resources.getSystem().displayMetrics.heightPixels * .75).toInt()
+                        imgView.requestLayout()
+
+                        imgDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+                    }
+                    else changeTab(imgUrl, BrowseFragment(imgUrl))
+                }
+            }
+
+            "Save Image" ->{
+                if(imgUrl != null) {
+                    if (imgUrl.contains("base64")) {
+                        val pureBytes = imgUrl.substring(imgUrl.indexOf(",") + 1)
+                        val decodedBytes = Base64.decode(pureBytes, Base64.DEFAULT)
+                        val finalImg =
+                            BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+
+                        MediaStore.Images.Media.insertImage(
+                            requireActivity().contentResolver,
+                            finalImg, "Image", null
+                        )
+                        Snackbar.make(binding.root, "Image Saved Successfully", 3000).show()
+                    }
+                    else startActivity(Intent(Intent.ACTION_VIEW).setData(Uri.parse(imgUrl)))
+                }
+            }
+
+            "Share" -> {
+                val tempUrl = url ?: imgUrl
+                if(tempUrl != null){
+                    if(tempUrl.contains("base64")){
+
+                        val pureBytes = tempUrl.substring(tempUrl.indexOf(",") + 1)
+                        val decodedBytes = Base64.decode(pureBytes, Base64.DEFAULT)
+                        val finalImg = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+
+                        val path = MediaStore.Images.Media.insertImage(requireActivity().contentResolver,
+                            finalImg, "Image", null)
+
+                        ShareCompat.IntentBuilder(requireContext()).setChooserTitle("Sharing Url!")
+                            .setType("image/*")
+                            .setStream(Uri.parse(path))
+                            .startChooser()
+                    }
+                    else{
+                        ShareCompat.IntentBuilder(requireContext()).setChooserTitle("Sharing Url!")
+                            .setType("text/plain").setText(tempUrl)
+                            .startChooser()
+                    }
+                }
+                else Snackbar.make(binding.root, "Not a Valid Link!", 3000).show()
             }
             "Close" -> {}
         }
