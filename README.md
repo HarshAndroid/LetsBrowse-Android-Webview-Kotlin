@@ -1,4 +1,4 @@
-# Lets_Browse
+# Lets Browse
 ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 ![Kotlin](https://img.shields.io/badge/Kotlin-100%25-brightgreen)
 
@@ -10,9 +10,9 @@
 <b>Some ScreenShots(Actual App Even Looks Better 😃):</b></br>
 <img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/1.png" width=30% height=30%/>
 <img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/2.png" width=30% height=30%/>
-<img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/3.jpg" width=30% height=30%/>
+<img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/bottom_dialog.png" width=30% height=30%/>
 <img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/4.png" width=30% height=30%/>
-<img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/5.png" width=30% height=30%/>
+<img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/tabs.png" width=30% height=30%/>
 <img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/6.png" width=30% height=30%/>
 <br>
 <br>
