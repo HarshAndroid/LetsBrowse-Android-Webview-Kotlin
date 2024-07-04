@@ -18,8 +18,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
+            android:layout_height="60dp"
+            android:paddingTop="10dp"
+            android:paddingStart="10dp"
+            android:orientation="horizontal"
+            tools:ignore="RtlSymmetry">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/webIcon"

@@ -1,3 +1,3 @@
-package com.harshrajpurohit.letsbrowse.model
+package com.harshRajpurohit.letsBrowse.model
 
-data class Bookmark(val name: String, val url: String, var image: ByteArray? = null)
+data class Bookmark(val name: String, val url: String, var image: ByteArray? = null, var imagePath: Int? = null)

@@ -1,4 +1,4 @@
-package com.harshrajpurohit.letsbrowse.model
+package com.harshRajpurohit.letsBrowse.model
 
 import androidx.fragment.app.Fragment
 

@@ -1,10 +1,10 @@
-package com.harshrajpurohit.letsbrowse.activity
+package com.harshRajpurohit.letsBrowse.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.harshrajpurohit.letsbrowse.adapter.BookmarkAdapter
-import com.harshrajpurohit.letsbrowse.databinding.ActivityBookmarkBinding
+import com.harshRajpurohit.letsBrowse.adapter.BookmarkAdapter
+import com.harshRajpurohit.letsBrowse.databinding.ActivityBookmarkBinding
 
 class BookmarkActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
