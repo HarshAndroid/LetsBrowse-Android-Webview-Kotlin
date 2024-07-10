@@ -17,6 +17,7 @@
         <activity
             android:name=".activity.BookmarkActivity"
             android:exported="false" />
+
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="uiMode|keyboard|keyboardHidden|screenSize|screenLayout|smallestScreenSize|orientation"
