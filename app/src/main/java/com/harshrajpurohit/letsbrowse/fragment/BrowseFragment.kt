@@ -26,7 +26,7 @@ import com.harshRajpurohit.letsBrowse.activity.changeTab
 import com.harshRajpurohit.letsBrowse.databinding.FragmentBrowseBinding
 import java.io.ByteArrayOutputStream
 
-class BrowseFragment(private var urlNew: String) : Fragment() {
+class BrowseFragment(private var urlNew: String = "https://www.google.com") : Fragment() {
 
     lateinit var binding: FragmentBrowseBinding
     var webIcon: Bitmap? = null

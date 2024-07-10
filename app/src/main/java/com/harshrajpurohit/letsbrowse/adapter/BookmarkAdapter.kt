@@ -90,3 +90,4 @@ class BookmarkAdapter(private val context: Context, private val isActivity: Bool
         return MainActivity.bookmarkList.size
     }
 }
+
