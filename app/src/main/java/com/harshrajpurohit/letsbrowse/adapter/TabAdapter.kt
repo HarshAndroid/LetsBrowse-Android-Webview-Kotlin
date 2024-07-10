@@ -1,4 +1,4 @@
-package com.harshrajpurohit.letsbrowse.adapter
+package com.harshRajpurohit.letsBrowse.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
-import com.harshrajpurohit.letsbrowse.activity.MainActivity
-import com.harshrajpurohit.letsbrowse.databinding.TabBinding
+import com.harshRajpurohit.letsBrowse.activity.MainActivity
+import com.harshRajpurohit.letsBrowse.databinding.TabBinding
 
 class TabAdapter(private val context: Context, private val dialog: AlertDialog): RecyclerView.Adapter<TabAdapter.MyHolder>() {
 

@@ -1,4 +1,4 @@
-package com.harshrajpurohit.letsbrowse.activity
+package com.harshRajpurohit.letsBrowse.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -34,18 +34,18 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.harshrajpurohit.letsbrowse.R
-import com.harshrajpurohit.letsbrowse.activity.MainActivity.Companion.myPager
-import com.harshrajpurohit.letsbrowse.activity.MainActivity.Companion.tabsBtn
-import com.harshrajpurohit.letsbrowse.adapter.TabAdapter
-import com.harshrajpurohit.letsbrowse.databinding.ActivityMainBinding
-import com.harshrajpurohit.letsbrowse.databinding.BookmarkDialogBinding
-import com.harshrajpurohit.letsbrowse.databinding.MoreFeaturesBinding
-import com.harshrajpurohit.letsbrowse.databinding.TabsViewBinding
-import com.harshrajpurohit.letsbrowse.fragment.BrowseFragment
-import com.harshrajpurohit.letsbrowse.fragment.HomeFragment
-import com.harshrajpurohit.letsbrowse.model.Bookmark
-import com.harshrajpurohit.letsbrowse.model.Tab
+import com.harshRajpurohit.letsBrowse.R
+import com.harshRajpurohit.letsBrowse.activity.MainActivity.Companion.myPager
+import com.harshRajpurohit.letsBrowse.activity.MainActivity.Companion.tabsBtn
+import com.harshRajpurohit.letsBrowse.adapter.TabAdapter
+import com.harshRajpurohit.letsBrowse.databinding.ActivityMainBinding
+import com.harshRajpurohit.letsBrowse.databinding.BookmarkDialogBinding
+import com.harshRajpurohit.letsBrowse.databinding.MoreFeaturesBinding
+import com.harshRajpurohit.letsBrowse.databinding.TabsViewBinding
+import com.harshRajpurohit.letsBrowse.fragment.BrowseFragment
+import com.harshRajpurohit.letsBrowse.fragment.HomeFragment
+import com.harshRajpurohit.letsBrowse.model.Bookmark
+import com.harshRajpurohit.letsBrowse.model.Tab
 import java.io.ByteArrayOutputStream
 import java.net.URL
 import java.text.SimpleDateFormat
@@ -361,6 +361,10 @@ class MainActivity : AppCompatActivity() {
         if(data != null){
             val list: ArrayList<Bookmark> = GsonBuilder().create().fromJson(data, object: TypeToken<ArrayList<Bookmark>>(){}.type)
             bookmarkList.addAll(list)
+        }else{
+            // add default bookmarks
+            bookmarkList.add(Bookmark("Google", "https://www.google.com/?gws_rd=ssl", null, R.drawable.ic_d_google))
+            bookmarkList.add(Bookmark("Youtube", "https://m.youtube.com/", null, R.drawable.ic_d_youtube))
         }
     }
 
@@ -375,22 +379,17 @@ fun changeTab(url: String, fragment: Fragment, isBackground: Boolean = false){
     if(!isBackground) myPager.currentItem = MainActivity.tabsList.size - 1
 }
 
+@Suppress("DEPRECATION")
 fun checkForInternet(context: Context): Boolean {
     val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         val network = connectivityManager.activeNetwork ?: return false
         val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-
-        return when {
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            else -> false
-        }
+        activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
     } else {
-        @Suppress("DEPRECATION") val networkInfo =
-            connectivityManager.activeNetworkInfo ?: return false
-        @Suppress("DEPRECATION")
-        return networkInfo.isConnected
+        val networkInfo = connectivityManager.activeNetworkInfo ?: return false
+        networkInfo.isConnected
     }
 }
