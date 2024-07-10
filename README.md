@@ -4,8 +4,8 @@
 
 <b>A Simple Privacy Browser.</b></br>
 
-<!-- <b>Apk Link (Try it yourself & I would love to hear your feedback 🙂):<b>
-  <br>https://drive.google.com/file/d/1Ser8PKnSWG6Gx-0LOalay8o1Ub9RxBZE/view?usp=sharing (v4.0.1) -->
+<b>Apk Link (Try it yourself & I would love to hear your feedback 🙂):<b>
+  <br>https://drive.google.com/file/d/1e6dVExS0qPWzTjoJliW4MhRnT2WHsHGh/view?usp=drivesdk (v1.0.1)
 
 <b>Some ScreenShots(Actual App Even Looks Better 😃):</b></br>
 <img src="https://github.com/HarshAndroid/Lets_Browse/blob/master/app_screenshots/1.png" width=30% height=30%/>
@@ -20,7 +20,7 @@
  <b>Features👇 : </b>
 <ul>
 <li>Bookmark Webpage
-<li>Save Webpage as Pdf(Once Page Loaded then it Doesn't require Internet to Save)
+<li>Save Webpage as Pdf (Once Page Loaded then it Doesn't require Internet to Save)
 <li>Desktop Site Support
 <li>Fullscreen browser
 <li>Multi Tabs Support
